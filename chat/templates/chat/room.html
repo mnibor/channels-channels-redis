@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="container col-8">
+        <h2>Sala de Chat: {{ room.name }}</h2>
+        <hr>
+        <div id="boxMessages"></div>
+        <div id="chat">
+            <input class="form-control" type="text" id="message">
+            <button class="btn btn-success mt-2" submit" id="btnMessage" >Enviar</button>
+            <a class="btn btn-primary mt-2 float-end" href="{% url 'home' %}">Salir</a>
+        </div>
+    </div>
+
+{% endblock %}
