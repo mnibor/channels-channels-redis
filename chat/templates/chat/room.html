@@ -10,7 +10,7 @@
         <div id="boxMessages"></div>
 
         <div id="chat">
-            <input class="form-control" type="text" id="inputMessage">
+            <input class="form-control" type="text" id="inputMessage" placeholder="Escribe un mensaje...">
 
             <button class="btn btn-success mt-2" submit" id="btnMessage" >Enviar</button>
 
@@ -20,7 +20,9 @@
 
     <script>
         var user = '{{ request.user }}'
+        var room_id = '{{ room.id }}'
     </script>
 
+    <script src="{% static '/js/jquery-3.7.1.min.js' %}"></script>
     <script src="{% static '/js/chat.js' %}"></script>
 {% endblock %}
