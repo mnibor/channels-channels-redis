@@ -12,6 +12,13 @@ $(function(){
 
     chatSocket.onopen = function(e){
         console.log('WEBSOCKET ABIERTO')
+        // Con esto evitamos que el websocket se cierre: genero un ping al servidor, cada 5 segundos. de esa forma jamas se cerrara la conexión
+
+        chatSocket.send('ping')
+
+        setInterval(function() {
+            chatSocket.send('ping');
+        }, 5000)
     }
 
     chatSocket.onclose = function(e){
