@@ -7,7 +7,6 @@ $(function(){
 
     var chatSocket = new WebSocket(url)
     // Definimos un tiempo de desconexión de 5 minutos (en milisegundos)
-    chatSocket.setMaxIdleTime(300000)
     console.log(chatSocket)
 
     chatSocket.onopen = function(e){
@@ -17,7 +16,9 @@ $(function(){
         chatSocket.send('ping')
 
         setInterval(function() {
-            chatSocket.send('ping');
+            if (chatSocket.readyState === 1) { // Solo enviar si está abierto
+                chatSocket.send('ping');
+            }
         }, 5000)
     }
 
