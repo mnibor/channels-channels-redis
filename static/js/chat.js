@@ -11,19 +11,28 @@ $(function(){
 
     chatSocket.onopen = function(e){
         console.log('WEBSOCKET ABIERTO')
-        // Con esto evitamos que el websocket se cierre: genero un ping al servidor, cada 5 segundos. de esa forma jamas se cerrara la conexión
-
-        chatSocket.send('ping')
-
-        setInterval(function() {
-            if (chatSocket.readyState === 1) { // Solo enviar si está abierto
-                chatSocket.send('ping');
-            }
-        }, 5000)
     }
 
     chatSocket.onclose = function(e){
         console.log('WEBSOCKET CERRADO')
+    }
+
+    chatSocket.onmessage = function(data) {
+        const datamsj = JSON.parse(data.data)
+        var msj = datamsj.message
+        var username = datamsj.username
+        var datetime = datamsj.datetime
+
+        document.querySelector('#boxMessages').innerHTML +=
+        `
+        <div class="alert alert-success" role="alert">
+            ${msj}
+            <div>
+                <small class="fst-italic fw-bold">${username}</small>
+                <small class="float-end">${datetime}</small>
+            </div>
+        </div>
+        `
     }
 
     document.querySelector('#btnMessage').addEventListener('click', sendMessage)
@@ -38,6 +47,12 @@ $(function(){
 
         if(message.value.trim() !== ''){
             loadMessageHTML(message.value.trim())
+            chatSocket.send(JSON.stringify({
+                message: message.value.trim(),
+            }))
+
+            console.log(message.value.trim())
+
             message.value = ''
         } else {
             console.log('Envió un mensaje vacío')
@@ -45,13 +60,25 @@ $(function(){
     }
 
     function loadMessageHTML(m){
+        var currentDatetime = new Date();
+        var dateObject = new Date(currentDatetime)
+
+        var year = dateObject.getFullYear();
+        var month = ('0' + (dateObject.getMonth() + 1)).slice(-2);
+        var day = ('0' + dateObject.getDate()).slice(-2);
+        var hours = ('0' + dateObject.getHours()).slice(-2);
+        var minutes = ('0' + dateObject.getMinutes()).slice(-2);
+        var seconds = ('0' + dateObject.getSeconds()).slice(-2);
+
+        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+
         document.querySelector('#boxMessages').innerHTML +=
         `
         <div class="alert alert-primary" role="alert">
             ${m}
             <div>
                 <small class="fst-italic fw-bold">${user}</small>
-                <small class="float-end">2023-12-27 08:33</small>
+                <small class="float-end">${formattedDate}</small>
             </div>
         </div>
         `
